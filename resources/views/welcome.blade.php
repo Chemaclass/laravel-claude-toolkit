@@ -159,8 +159,12 @@
                                     <input type="text" id="project-name" value="my-app" placeholder="my-app" oninput="updateCommands()">
                                 </div>
                                 <div class="config-field">
-                                    <label for="app-port">Port:</label>
+                                    <label for="app-port">App:</label>
                                     <input type="number" id="app-port" value="8080" class="port-input" oninput="updateCommands()">
+                                </div>
+                                <div class="config-field">
+                                    <label for="vite-port">Vite:</label>
+                                    <input type="number" id="vite-port" value="5174" class="port-input" oninput="updateCommands()">
                                 </div>
                             </div>
                             <button class="copy-all-btn" onclick="copyAll(this)">COPY ALL</button>
@@ -177,7 +181,7 @@
                         </div>
                         <div class="cmd-row">
                             <span class="prompt">$</span>
-                            <code id="cmd-3"><span class="cmd">APP_PORT=</span><span class="file">8080</span> <span class="cmd">./vendor/bin/sail up -d</span></code>
+                            <code id="cmd-3"><span class="cmd">APP_PORT=</span><span class="file">8080</span> <span class="cmd">VITE_PORT=</span><span class="file">5174</span> <span class="cmd">./vendor/bin/sail up -d</span></code>
                             <button class="copy-inline" onclick="copyCmd(this, 3)" title="Copy">copy</button>
                         </div>
                     </div>
@@ -497,23 +501,29 @@ Then loops back to RED for next behavior</div>
                 return document.getElementById('project-name').value || 'my-app';
             }
 
-            function getPort() {
+            function getAppPort() {
                 return document.getElementById('app-port').value || '8080';
+            }
+
+            function getVitePort() {
+                return document.getElementById('vite-port').value || '5174';
             }
 
             function getCommand(num) {
                 const name = getProjectName();
-                const port = getPort();
+                const appPort = getAppPort();
+                const vitePort = getVitePort();
                 switch(num) {
                     case 1: return `gh repo create ${name} --template Chemaclass/laravel-claude-toolkit --public --clone`;
                     case 2: return `cd ${name} && composer setup`;
-                    case 3: return `APP_PORT=${port} ./vendor/bin/sail up -d`;
+                    case 3: return `APP_PORT=${appPort} VITE_PORT=${vitePort} ./vendor/bin/sail up -d`;
                 }
             }
 
             function updateCommands() {
                 const name = getProjectName();
-                const port = getPort();
+                const appPort = getAppPort();
+                const vitePort = getVitePort();
 
                 document.getElementById('cmd-1').innerHTML =
                     `<span class="cmd">gh repo create</span> <span class="file">${name}</span> <span class="cmd">--template</span> Chemaclass/laravel-claude-toolkit <span class="cmd">--public --clone</span>`;
@@ -522,7 +532,7 @@ Then loops back to RED for next behavior</div>
                     `<span class="cmd">cd</span> <span class="file">${name}</span> && <span class="cmd">composer setup</span>`;
 
                 document.getElementById('cmd-3').innerHTML =
-                    `<span class="cmd">APP_PORT=</span><span class="file">${port}</span> <span class="cmd">./vendor/bin/sail up -d</span>`;
+                    `<span class="cmd">APP_PORT=</span><span class="file">${appPort}</span> <span class="cmd">VITE_PORT=</span><span class="file">${vitePort}</span> <span class="cmd">./vendor/bin/sail up -d</span>`;
             }
 
             function copyCmd(btn, num) {
