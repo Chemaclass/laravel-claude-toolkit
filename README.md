@@ -2,40 +2,29 @@
 
 Laravel 12 project with Docker-based development environment.
 
-## Requirements
+## Stack
 
-- Docker & Docker Compose
+PHP 8.5 | Laravel 12 | SQLite | Vite + Tailwind CSS 4
 
 ## Quick Start
 
 ```bash
-./vendor/bin/sail up -d    # Start development environment
-./vendor/bin/sail down     # Stop all services
+./vendor/bin/sail up -d    # Start
+./vendor/bin/sail down     # Stop
 ```
 
-Access: http://localhost:8083
+Access: http://localhost
 
-## Available Commands
+## Commands
 
 ```bash
-./vendor/bin/sail up -d      # Start dev environment
-./vendor/bin/sail down       # Stop all services
-./vendor/bin/sail shell      # Open shell in app container
-./vendor/bin/sail test       # Run PHPUnit tests
-./vendor/bin/sail artisan    # Run artisan commands
-./vendor/bin/sail composer   # Run composer commands
-./vendor/bin/sail npm        # Run npm commands
+sail up -d       # Start dev environment
+sail down        # Stop all services
+sail shell       # Open shell in container
+sail test        # Run PHPUnit tests
+sail artisan     # Run artisan commands
+sail composer    # Run composer commands
+sail npm         # Run npm commands
 ```
 
-Tip: Add alias to your shell: `alias sail='./vendor/bin/sail'`
-
-## Stack
-
-- PHP 8.4
-- Laravel 12
-- SQLite
-- Vite + Tailwind CSS 4
-
-## License
-
-MIT
+Tip: `alias sail='./vendor/bin/sail'`
