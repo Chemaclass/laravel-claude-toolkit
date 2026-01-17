@@ -84,6 +84,83 @@ tests/
 - Use API Resources for response transformation
 - Register interface bindings in module service providers
 
+## Inter-Module Communication
+
+### Communication Strategies
+
+| Strategy | When to Use | Example |
+|----------|-------------|---------|
+| **Interface Injection** | Cross-module queries, synchronous reads | Task handler injects TeamRepository |
+| **Domain Events** | Write side effects, eventual consistency | UserCreated → Update team stats |
+| **Shared Kernel** | Common value objects, IDs | `Modules\Shared\Domain\ValueObject\Uuid` |
+
+### Dependency Rules
+
+| From Module | Can Depend On |
+|-------------|---------------|
+| Task | Team (interface), User (IDs), Shared |
+| Team | User (interface), Shared |
+| User | Shared only |
+
+**Never allow**:
+- Circular dependencies (Team → Task → Team)
+- Infrastructure layer cross-references
+- Direct model imports across modules
+
+### Cross-Module Query Example
+
+When querying across modules, the module owning the result type owns the handler:
+
+```php
+// Task module queries Team module for user IDs
+final readonly class GetTasksByTeamHandler
+{
+    public function __construct(
+        private TaskRepository $taskRepository,
+        private TeamRepository $teamRepository,  // From Team module
+    ) {}
+
+    public function __invoke(GetTasksByTeam $query): array
+    {
+        $team = $this->teamRepository->findById(TeamId::fromString($query->teamId));
+        $userIds = $team->getUserIds();
+        return $this->taskRepository->findByUserIds($userIds);
+    }
+}
+```
+
+### Avoiding Circular Dependencies
+
+| Strategy | When to Use |
+|----------|-------------|
+| **Dependency Inversion** | Module A needs B's data AND B needs A's data |
+| **Domain Events** | Reacting to changes without coupling |
+| **Shared Query Service** | Complex cross-module aggregations |
+| **ID-Only References** | Store IDs, query separately when needed |
+
+**Dependency Inversion Pattern**:
+```php
+// Team defines what it needs (interface)
+namespace Modules\Team\Domain\Contract;
+interface TeamTaskCounter {
+    public function countByTeamId(TeamId $teamId): int;
+}
+
+// Task implements it (adapter) - no circular dependency
+namespace Modules\Task\Infrastructure\Adapter;
+class TaskRepositoryTeamCounter implements TeamTaskCounter { ... }
+```
+
+### Decision Matrix
+
+| Scenario | Strategy |
+|----------|----------|
+| Module A needs data from B | Inject B's repository interface |
+| Module A reacts to B's changes | Domain Events |
+| Both A and B need each other | Dependency Inversion |
+| Complex aggregation | Shared Query Service |
+| Just need ID reference | ID-Only References |
+
 ## TDD Workflow
 
 Always follow red-green-refactor:
