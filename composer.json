@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "chemaclass/laravel-claude-toolkit",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Laravel project with modular monolith architecture, DDD patterns, and Claude Code tooling.",
+    "keywords": ["laravel", "ddd", "modular-monolith", "hexagonal", "claude-code"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -30,13 +30,11 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/",
-            "Tests\\Support\\": "tests/Support/"
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
         "setup": [
-            "composer install",
             "git config core.hooksPath .githooks",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
@@ -79,19 +77,10 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ]
     },
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
-    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "php-http/discovery": true
-        }
+        "sort-packages": true
     },
     "minimum-stability": "stable",
     "prefer-stable": true
