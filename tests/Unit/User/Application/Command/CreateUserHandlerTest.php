@@ -14,11 +14,12 @@ use PHPUnit\Framework\TestCase;
 final class CreateUserHandlerTest extends TestCase
 {
     private UserInMemoryRepository $repository;
+
     private CreateUserHandler $handler;
 
     protected function setUp(): void
     {
-        $this->repository = new UserInMemoryRepository();
+        $this->repository = new UserInMemoryRepository;
         $this->handler = new CreateUserHandler($this->repository);
     }
 

@@ -6,6 +6,4 @@ namespace Modules\User\Domain\Entity;
 
 use Modules\Shared\Domain\ValueObject\Uuid;
 
-final readonly class UserId extends Uuid
-{
-}
+final readonly class UserId extends Uuid {}

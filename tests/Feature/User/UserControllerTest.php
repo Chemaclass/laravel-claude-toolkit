@@ -60,7 +60,7 @@ final class UserControllerTest extends TestCase
     #[Test]
     public function it_retrieves_a_user_by_id(): void
     {
-        $repository = new UserEloquentRepository();
+        $repository = new UserEloquentRepository;
         $id = UserId::generate();
         $user = User::create(
             $id,

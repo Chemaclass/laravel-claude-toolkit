@@ -16,7 +16,7 @@ final readonly class Email
     {
         $value = trim($value);
 
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException(
                 sprintf('Invalid email address: %s', $value)
             );

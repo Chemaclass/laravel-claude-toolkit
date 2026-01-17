@@ -12,6 +12,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.0",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.52",
@@ -36,17 +37,26 @@
     "scripts": {
         "setup": [
             "composer install",
+            "git config core.hooksPath .githooks",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "npm install",
             "npm run build"
         ],
+        "post-install-cmd": [
+            "git config core.hooksPath .githooks || true"
+        ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
         ],
+        "lint": "vendor/bin/pint --test",
+        "fix": "vendor/bin/pint",
+        "phpstan": "vendor/bin/phpstan analyse --memory-limit=512M",
         "test": [
+            "@lint",
+            "@phpstan",
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],

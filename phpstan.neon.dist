@@ -1,0 +1,17 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+        - modules/
+
+    level: 5
+
+    ignoreErrors:
+        # Uuid base class uses static for inheritance support (UserId, etc)
+        - identifier: new.static
+          path: modules/Shared/Domain/ValueObject/Uuid.php
+
+    excludePaths:
+        - modules/*/Infrastructure/Persistence/Eloquent/Model/*

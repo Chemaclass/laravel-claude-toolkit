@@ -9,8 +9,8 @@ use Modules\Shared\Domain\ValueObject\Email;
 use Modules\User\Domain\Entity\User;
 use Modules\User\Domain\Entity\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Repository\UserEloquentRepository;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 final class UserEloquentRepositoryTest extends TestCase
 {
@@ -21,7 +21,7 @@ final class UserEloquentRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repository = new UserEloquentRepository();
+        $this->repository = new UserEloquentRepository;
     }
 
     #[Test]

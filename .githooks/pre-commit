@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo "Running pre-commit checks..."
+
+# Run composer test (lint, phpstan, phpunit)
+composer test
+
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "Pre-commit checks failed!"
+    echo "Run 'composer fix' to auto-fix code style issues."
+    echo ""
+    exit 1
+fi
+
+echo "All checks passed!"
+exit 0
