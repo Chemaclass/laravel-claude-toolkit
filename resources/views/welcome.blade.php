@@ -33,7 +33,8 @@
             .dot-red { background-color: rgba(239, 68, 68, 0.8); }
             .dot-yellow { background-color: rgba(234, 179, 8, 0.8); }
             .dot-green { background-color: rgba(34, 197, 94, 0.8); }
-            .terminal-path { font-size: 0.75rem; color: #6b7280; margin-left: 0.5rem; }
+            .terminal-path { font-size: 0.75rem; color: #6b7280; margin-left: 0.5rem; text-decoration: none; transition: color 0.2s; }
+            .terminal-path:hover { color: #4ade80; }
             .terminal-content { background-color: #030712; padding: 1.5rem; }
             .terminal-content > * + * { margin-top: 1rem; }
             pre { font-size: 0.75rem; line-height: 1.25; margin: 0; white-space: pre-wrap; word-wrap: break-word; }
@@ -124,7 +125,7 @@
                         <span class="terminal-dot dot-yellow"></span>
                         <span class="terminal-dot dot-green"></span>
                     </div>
-                    <span class="terminal-path">~/chemaclass/laravel-claude-toolkit</span>
+                    <a href="https://github.com/Chemaclass/laravel-claude-toolkit" target="_blank" class="terminal-path">~/chemaclass/laravel-claude-toolkit</a>
                 </div>
 
                 <div class="terminal-content">
