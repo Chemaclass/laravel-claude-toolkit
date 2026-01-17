@@ -21,74 +21,23 @@ Guide developers in designing and implementing clean, maintainable modular monol
 
 ## DDD Tactical Patterns
 
-### Entity Design
-```php
-final readonly class Order {
-    private function __construct(
-        private OrderId $id,
-        private CustomerId $customerId,
-        private OrderStatus $status,
-    ) {}
+| Pattern | Key Characteristics |
+|---------|---------------------|
+| Entity | Identity matters, `final readonly`, private constructor + `create()` factory |
+| Value Object | Defined by attributes, immutable, `fromString()`, `equals()` |
+| Aggregate | Clear boundaries, one repo per root, modify one per transaction |
+| Repository | Interface in Domain, implementation in Infrastructure |
+| Domain Event | Record what happened, enable loose coupling |
 
-    public static function create(OrderId $id, CustomerId $customerId): self {
-        return new self($id, $customerId, OrderStatus::Pending);
-    }
-
-    public function confirm(): self {
-        if (!$this->status->isPending()) {
-            throw new CannotConfirmOrderException($this->status);
-        }
-        return new self($this->id, $this->customerId, OrderStatus::Confirmed);
-    }
-}
-```
-
-### Value Object Design
-```php
-final readonly class Email {
-    private function __construct(private string $value) {}
-
-    public static function fromString(string $email): self {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidEmailException($email);
-        }
-        return new self(strtolower($email));
-    }
-
-    public function toString(): string { return $this->value; }
-    public function equals(self $other): bool { return $this->value === $other->value; }
-}
-```
-
-### Aggregate Design
-- Define clear aggregate boundaries
-- One repository per aggregate root
-- Modify one aggregate per transaction
-- Reference other aggregates by ID only
+> See `/create-entity`, `/create-value-object` commands for full templates.
 
 ## Inter-Module Communication
 
-### Direct Dependency (Simple)
-```php
-// Order module depends on User module interface
-final class CreateOrderHandler {
-    public function __construct(
-        private OrderRepository $orderRepository,
-        private UserRepository $userRepository, // Cross-module
-    ) {}
-}
-```
-
-### Event-Based (Loose Coupling)
-```php
-// User module publishes event
-$this->events->dispatch(new UserCreated($user->id()));
-
-// Order module listens
-class CreateWelcomeOrderOnUserCreated {
-    public function __invoke(UserCreated $event): void { /* ... */ }
-}
-```
+| Strategy | When to Use |
+|----------|-------------|
+| Interface Injection | Cross-module queries, synchronous reads |
+| Domain Events | Side effects, eventual consistency |
+| ID-Only References | Store IDs, query separately when needed |
 
 ## When to Use What
 

@@ -106,49 +106,12 @@ final class <EntityName>Test extends TestCase
 
 ## Entity ID Template
 
-Create the ID value object in `modules/<Module>/Domain/Entity/<EntityName>Id.php`:
-
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\<Module>\Domain\Entity;
-
-use Ramsey\Uuid\Uuid;
-
-final readonly class <EntityName>Id
-{
-    private function __construct(
-        private string $value,
-    ) {
-    }
-
-    public static function generate(): self
-    {
-        return new self(Uuid::uuid4()->toString());
-    }
-
-    public static function fromString(string $value): self
-    {
-        if (!Uuid::isValid($value)) {
-            throw new \InvalidArgumentException("Invalid UUID: {$value}");
-        }
-
-        return new self($value);
-    }
-
-    public function toString(): string
-    {
-        return $this->value;
-    }
-
-    public function equals(self $other): bool
-    {
-        return $this->value === $other->value;
-    }
-}
+Create the ID using `/create-value-object` command's ID template:
 ```
+modules/<Module>/Domain/Entity/<EntityName>Id.php
+```
+
+> See `create-value-object.md` for the full ID Value Object template.
 
 ## Exception Template
 

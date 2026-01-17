@@ -82,7 +82,7 @@ declare(strict_types=1);
 namespace Tests\Unit\{Module}\Domain\ValueObject;
 
 use Modules\{Module}\Domain\ValueObject\{Name};
-use Modules\{Module}\Domain\Exception\Invalid{Name}Exception;
+use Modules\{Module}\Domain\Exception\Invalid{Name};
 use PHPUnit\Framework\TestCase;
 
 final class {Name}Test extends TestCase
@@ -90,14 +90,12 @@ final class {Name}Test extends TestCase
     public function test_creates_from_valid_string(): void
     {
         $vo = {Name}::fromString('valid-value');
-
         $this->assertEquals('valid-value', $vo->toString());
     }
 
     public function test_throws_exception_for_invalid_value(): void
     {
-        $this->expectException(Invalid{Name}Exception::class);
-
+        $this->expectException(Invalid{Name}::class);
         {Name}::fromString('invalid');
     }
 
@@ -105,7 +103,6 @@ final class {Name}Test extends TestCase
     {
         $vo1 = {Name}::fromString('value');
         $vo2 = {Name}::fromString('value');
-
         $this->assertTrue($vo1->equals($vo2));
     }
 }
@@ -214,26 +211,13 @@ final class {Name}Test extends TestCase
 
 ## Test Builders
 
-Create reusable test data factories:
-
 ```php
 // tests/Support/Builders/{Module}/{Name}Builder.php
-<?php
-
-declare(strict_types=1);
-
-namespace Tests\Support\Builders\{Module};
-
-use Modules\{Module}\Domain\Entity\{Name};
-use Modules\{Module}\Domain\Entity\{Name}Id;
-
 final class {Name}Builder
 {
     public static function create(?{Name}Id $id = null): {Name}
     {
-        return {Name}::create(
-            $id ?? {Name}Id::generate(),
-        );
+        return {Name}::create($id ?? {Name}Id::generate());
     }
 }
 ```
@@ -241,48 +225,18 @@ final class {Name}Builder
 ## Running Tests
 
 ```bash
-# All tests
-./vendor/bin/sail test
-
-# By module
-./vendor/bin/sail test tests/Unit/User
-./vendor/bin/sail test tests/Integration/User
-./vendor/bin/sail test tests/Feature/User
-
-# By filter
-./vendor/bin/sail test --filter UserTest
-./vendor/bin/sail test --filter test_creates_user
-
-# With coverage
-./vendor/bin/sail test --coverage
-
-# Specific file
-./vendor/bin/sail test tests/Unit/User/Domain/Entity/UserTest.php
-```
-
-## PHPUnit Configuration
-
-Ensure `phpunit.xml` has all suites:
-
-```xml
-<testsuites>
-    <testsuite name="Unit">
-        <directory>tests/Unit</directory>
-    </testsuite>
-    <testsuite name="Integration">
-        <directory>tests/Integration</directory>
-    </testsuite>
-    <testsuite name="Feature">
-        <directory>tests/Feature</directory>
-    </testsuite>
-</testsuites>
+./vendor/bin/sail test                           # All tests
+./vendor/bin/sail test tests/Unit/User           # By module
+./vendor/bin/sail test --filter UserTest         # By filter
+./vendor/bin/sail test --coverage                # With coverage
 ```
 
 ## Best Practices
 
-1. **Test names describe behavior**: `test_throws_exception_when_email_invalid`
-2. **One concept per test**: Don't test multiple behaviors
-3. **AAA pattern**: Arrange, Act, Assert
-4. **Use Builders**: Avoid duplicating test data setup
-5. **Fast tests first**: Run unit tests before integration
-6. **Mock at boundaries**: Mock interfaces, not concrete classes
+| Practice | Description |
+|----------|-------------|
+| Descriptive names | `test_throws_exception_when_email_invalid` |
+| One concept per test | Don't test multiple behaviors |
+| AAA pattern | Arrange → Act → Assert |
+| Use Builders | Avoid duplicating test data setup |
+| Mock at boundaries | Mock interfaces, not concrete classes |

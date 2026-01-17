@@ -62,132 +62,21 @@ With passing tests as a safety net:
 
 ## Test Types by Layer
 
-### Unit Tests (Domain)
-- **Location:** `tests/Unit/<Module>/Domain/`
-- **Purpose:** Test entities, value objects, domain services
-- **Dependencies:** None (pure PHP)
-- **Speed:** Very fast
+| Layer | Location | Base Class | Purpose |
+|-------|----------|------------|---------|
+| Unit (Domain) | `tests/Unit/<Module>/Domain/` | `PHPUnit\TestCase` | Entities, VOs, domain services |
+| Unit (Application) | `tests/Unit/<Module>/Application/` | `PHPUnit\TestCase` | Handlers with mocked repos |
+| Integration | `tests/Integration/<Module>/` | `Tests\TestCase` | Repository implementations |
+| Feature | `tests/Feature/<Module>/` | `Tests\TestCase` | HTTP request/response |
 
-```php
-final class UserTest extends TestCase  // NOT Laravel TestCase
-{
-    public function test_email_must_be_valid(): void
-    {
-        $this->expectException(InvalidEmailException::class);
-        Email::fromString('invalid');
-    }
-}
-```
-
-### Unit Tests (Application)
-- **Location:** `tests/Unit/<Module>/Application/`
-- **Purpose:** Test command/query handlers
-- **Dependencies:** Mocked repositories
-- **Speed:** Fast
-
-```php
-final class CreateUserHandlerTest extends TestCase
-{
-    public function test_creates_user(): void
-    {
-        $repo = $this->createMock(UserRepository::class);
-        $repo->expects($this->once())->method('save');
-
-        $handler = new CreateUserHandler($repo);
-        $handler(new CreateUser(id: 'id', email: 'a@b.com'));
-    }
-}
-```
-
-### Integration Tests
-- **Location:** `tests/Integration/<Module>/`
-- **Purpose:** Test repository implementations
-- **Dependencies:** Real database
-- **Speed:** Slower
-
-```php
-final class UserEloquentRepositoryTest extends TestCase
-{
-    use RefreshDatabase;
-
-    public function test_persists_user(): void
-    {
-        $repo = new UserEloquentRepository();
-        $user = User::create(UserId::generate(), Email::fromString('a@b.com'));
-
-        $repo->save($user);
-
-        $this->assertDatabaseHas('users', ['email' => 'a@b.com']);
-    }
-}
-```
-
-### Feature Tests (HTTP)
-- **Location:** `tests/Feature/<Module>/`
-- **Purpose:** Test full HTTP request/response cycle
-- **Dependencies:** Full application
-- **Speed:** Slowest
-
-```php
-final class UserControllerTest extends TestCase
-{
-    use RefreshDatabase;
-
-    public function test_creates_user_via_api(): void
-    {
-        $response = $this->postJson('/api/users', [
-            'email' => 'test@example.com',
-        ]);
-
-        $response->assertCreated();
-    }
-}
-```
+> See `tdd-workflow` skill for complete test templates.
 
 ## TDD Best Practices
 
-### Test Naming
-Use descriptive names that explain the scenario:
-```php
-// Good
-test_throws_exception_when_email_is_invalid()
-test_can_create_user_with_valid_data()
-test_returns_404_when_user_not_found()
-
-// Bad
-test_user()
-test_create()
-testException()
-```
-
-### Test Structure (AAA Pattern)
-```php
-public function test_something(): void
-{
-    // Arrange - set up the test data
-    $user = User::create(...);
-
-    // Act - perform the action
-    $result = $user->changeName('New Name');
-
-    // Assert - verify the outcome
-    $this->assertEquals('New Name', $result->name());
-}
-```
-
-### One Assertion Per Test
-Prefer focused tests with single assertions:
-```php
-// Good - two separate tests
-public function test_user_has_correct_email(): void { ... }
-public function test_user_has_correct_name(): void { ... }
-
-// Acceptable - related assertions in one test
-public function test_user_is_created_correctly(): void {
-    $this->assertEquals($email, $user->email());
-    $this->assertEquals($name, $user->name());
-}
-```
+- **Test naming**: `test_throws_exception_when_email_is_invalid()`
+- **AAA pattern**: Arrange → Act → Assert
+- **One concept per test**: Focus on single behavior
+- **Mock at boundaries**: Mock interfaces, not concrete classes
 
 ## Running Tests
 

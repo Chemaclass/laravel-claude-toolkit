@@ -62,7 +62,6 @@ Scaffold a new module with the full hexagonal architecture directory structure.
 
 ```php
 <?php
-
 declare(strict_types=1);
 
 namespace Modules\<ModuleName>\Infrastructure\Provider;
@@ -73,7 +72,7 @@ final class <ModuleName>ServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->registerRepositories();
+        // $this->app->bind(InterfaceRepository::class, EloquentRepository::class);
     }
 
     public function boot(): void
@@ -81,106 +80,35 @@ final class <ModuleName>ServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../../Database/Migrations');
         $this->loadRoutesFrom(__DIR__ . '/../../Http/Routes/api.php');
     }
-
-    private function registerRepositories(): void
-    {
-        // Example:
-        // $this->app->bind(
-        //     \Modules\<ModuleName>\Domain\Repository\<Entity>Repository::class,
-        //     \Modules\<ModuleName>\Infrastructure\Persistence\Eloquent\Repository\<Entity>EloquentRepository::class
-        // );
-    }
 }
 ```
 
-## Routes File Template (Optional)
+## Setup Commands
 
-Create `modules/<ModuleName>/Infrastructure/Http/Routes/api.php`:
-
-```php
-<?php
-
-declare(strict_types=1);
-
-use Illuminate\Support\Facades\Route;
-
-Route::prefix('api/<module-name>')
-    ->middleware(['api'])
-    ->group(function () {
-        // Register routes here
-    });
-```
-
-## Bash Commands
-
-Create directories:
 ```bash
+# Create directories
 mkdir -p modules/<ModuleName>/Domain/{Entity,ValueObject,Repository,Service,Event,Exception}
 mkdir -p modules/<ModuleName>/Application/{Command,Query}
-mkdir -p modules/<ModuleName>/Infrastructure/Persistence/Eloquent/{Model,Repository}
-mkdir -p modules/<ModuleName>/Infrastructure/Persistence/InMemory
-mkdir -p modules/<ModuleName>/Infrastructure/Http/{Controller,Request,Resource,Routes}
-mkdir -p modules/<ModuleName>/Infrastructure/Provider
-mkdir -p modules/<ModuleName>/Infrastructure/Database/Migrations
-mkdir -p tests/Unit/<ModuleName>/Domain/{Entity,ValueObject}
-mkdir -p tests/Unit/<ModuleName>/Application/{Command,Query}
-mkdir -p tests/Integration/<ModuleName>
-mkdir -p tests/Feature/<ModuleName>
-```
+mkdir -p modules/<ModuleName>/Infrastructure/{Persistence/Eloquent/{Model,Repository},Persistence/InMemory,Http/{Controller,Request,Resource,Routes},Provider,Database/Migrations}
+mkdir -p tests/{Unit/<ModuleName>/Domain/{Entity,ValueObject},Unit/<ModuleName>/Application/{Command,Query},Integration/<ModuleName>,Feature/<ModuleName>}
 
-Create .gitkeep files (to keep empty directories in git):
-```bash
-find modules/<ModuleName> -type d -empty -exec touch {}/.gitkeep \;
-find tests/Unit/<ModuleName> -type d -empty -exec touch {}/.gitkeep \;
-find tests/Integration/<ModuleName> -type d -empty -exec touch {}/.gitkeep \;
-find tests/Feature/<ModuleName> -type d -empty -exec touch {}/.gitkeep \;
-```
+# Add .gitkeep files
+find modules/<ModuleName> tests/Unit/<ModuleName> tests/Integration/<ModuleName> tests/Feature/<ModuleName> -type d -empty -exec touch {}/.gitkeep \;
 
-## Namespace Configuration
-
-Ensure `composer.json` includes the module namespace:
-
-```json
-{
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/",
-            "Modules\\": "modules/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    }
-}
-```
-
-After adding, run:
-```bash
+# Ensure composer.json has: "Modules\\": "modules/"
 composer dump-autoload
 ```
 
-## Module Registration
+## Registration
 
-### Laravel 11+ (bootstrap/providers.php)
-
+**Laravel 11+** (`bootstrap/providers.php`):
 ```php
-<?php
-
-return [
-    App\Providers\AppServiceProvider::class,
-    Modules\<ModuleName>\Infrastructure\Provider\<ModuleName>ServiceProvider::class,
-];
+Modules\<ModuleName>\Infrastructure\Provider\<ModuleName>ServiceProvider::class,
 ```
 
-### Laravel 10 and earlier (config/app.php)
-
+**Laravel 10-** (`config/app.php`):
 ```php
-'providers' => [
-    // ...
-    Modules\<ModuleName>\Infrastructure\Provider\<ModuleName>ServiceProvider::class,
-],
+'providers' => [Modules\<ModuleName>\Infrastructure\Provider\<ModuleName>ServiceProvider::class],
 ```
 
 ## Next Steps

@@ -73,288 +73,35 @@ modules/
 
 ## File Templates
 
-### Entity (`modules/{Module}/Domain/Entity/{Name}.php`)
+> Full templates available via `/create-entity`, `/create-value-object`, `/create-use-case`, `/create-repository`, `/create-controller` commands.
+
+### Quick Reference
+
+| Component | Location | Key Pattern |
+|-----------|----------|-------------|
+| Entity | `Domain/Entity/{Name}.php` | `final readonly`, private constructor, `create()` factory |
+| Value Object | `Domain/ValueObject/{Name}.php` | `final readonly`, `fromString()`, `equals()` |
+| Repository | `Domain/Repository/{Name}Repository.php` | Interface with `save()`, `findById()`, `delete()` |
+| Command/Query | `Application/{Type}/{Name}.php` | `final readonly` DTO with public properties |
+| Handler | `Application/{Type}/{Name}Handler.php` | `__invoke()` method, inject interfaces |
+| Event | `Domain/Event/{Name}.php` | `final readonly`, `raise()` factory |
+| Exception | `Domain/Exception/{Name}.php` | Named constructors: `withId()`, `empty()`, `withReason()` |
+| Controller | `Infrastructure/Http/Controller/` | Thin, delegates to handlers |
+| ServiceProvider | `Infrastructure/Provider/` | Binds interfaces to implementations |
+
+### Exception Patterns
 ```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Domain\Entity;
-
-final readonly class {Name}
-{
-    private function __construct(
-        private {Name}Id $id,
-    ) {
-    }
-
-    public static function create({Name}Id $id): self
-    {
-        return new self($id);
-    }
-
-    public function id(): {Name}Id
-    {
-        return $this->id;
-    }
-}
-```
-
-### Value Object (`modules/{Module}/Domain/ValueObject/{Name}.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Domain\ValueObject;
-
-final readonly class {Name}
-{
-    private function __construct(
-        private string $value,
-    ) {
-    }
-
-    public static function fromString(string $value): self
-    {
-        // Validate here
-        return new self($value);
-    }
-
-    public function toString(): string
-    {
-        return $this->value;
-    }
-
-    public function equals(self $other): bool
-    {
-        return $this->value === $other->value;
-    }
-}
-```
-
-### Repository Interface (`modules/{Module}/Domain/Repository/{Name}Repository.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Domain\Repository;
-
-use Modules\{Module}\Domain\Entity\{Name};
-use Modules\{Module}\Domain\Entity\{Name}Id;
-
-interface {Name}Repository
-{
-    public function save({Name} $entity): void;
-    public function findById({Name}Id $id): ?{Name};
-    public function delete({Name}Id $id): void;
-}
-```
-
-### Command DTO (`modules/{Module}/Application/Command/{Name}.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Application\Command;
-
-final readonly class {Name}
-{
-    public function __construct(
-        public string $id,
-    ) {
-    }
-}
-```
-
-### Command Handler (`modules/{Module}/Application/Command/{Name}Handler.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Application\Command;
-
-use Modules\{Module}\Domain\Repository\{Entity}Repository;
-
-final readonly class {Name}Handler
-{
-    public function __construct(
-        private {Entity}Repository $repository,
-    ) {
-    }
-
-    public function __invoke({Name} $command): void
-    {
-        // Implementation
-    }
-}
-```
-
-### Query DTO (`modules/{Module}/Application/Query/{Name}.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Application\Query;
-
-final readonly class {Name}
-{
-    public function __construct(
-        public string $id,
-    ) {
-    }
-}
-```
-
-### Query Handler (`modules/{Module}/Application/Query/{Name}Handler.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Application\Query;
-
-use Modules\{Module}\Domain\Entity\{Entity};
-use Modules\{Module}\Domain\Entity\{Entity}Id;
-use Modules\{Module}\Domain\Repository\{Entity}Repository;
-
-final readonly class {Name}Handler
-{
-    public function __construct(
-        private {Entity}Repository $repository,
-    ) {
-    }
-
-    public function __invoke({Name} $query): ?{Entity}
-    {
-        return $this->repository->findById(
-            {Entity}Id::fromString($query->id)
-        );
-    }
-}
-```
-
-### Domain Event (`modules/{Module}/Domain/Event/{Name}.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Domain\Event;
-
-final readonly class {Name}
-{
-    public function __construct(
-        public string $aggregateId,
-        public \DateTimeImmutable $occurredAt,
-    ) {
-    }
-
-    public static function raise(string $aggregateId): self
-    {
-        return new self($aggregateId, new \DateTimeImmutable());
-    }
-}
-```
-
-### Domain Exception (`modules/{Module}/Domain/Exception/{Name}.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Domain\Exception;
-
-final class {Entity}NotFound extends \DomainException
-{
-    public static function withId(string $id): self
-    {
+// Not found
+final class {Entity}NotFound extends \DomainException {
+    public static function withId(string $id): self {
         return new self("{Entity} with ID {$id} was not found");
     }
 }
-```
 
-### Validation Exception (`modules/{Module}/Domain/Exception/Invalid{Name}.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Domain\Exception;
-
-final class Invalid{Name} extends \DomainException
-{
-    public static function empty(): self
-    {
-        return new self('{Name} cannot be empty');
-    }
-
-    public static function withFormat(string $value): self
-    {
-        return new self("Invalid {Name} format: {$value}");
-    }
-
-    public static function withReason(string $reason): self
-    {
-        return new self("Invalid {Name}: {$reason}");
-    }
-}
-```
-
-### Controller (`modules/{Module}/Infrastructure/Http/Controller/{Name}Controller.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Infrastructure\Http\Controller;
-
-use Modules\{Module}\Application\Command\{Command};
-use Modules\{Module}\Application\Command\{Command}Handler;
-
-final readonly class {Name}Controller
-{
-    public function __construct(
-        private {Command}Handler $handler,
-    ) {
-    }
-
-    public function __invoke(Request $request): JsonResponse
-    {
-        ($this->handler)(new {Command}(
-            id: $request->validated('id'),
-        ));
-
-        return response()->json(null, 201);
-    }
-}
-```
-
-### Module Service Provider (`modules/{Module}/Infrastructure/Provider/{Module}ServiceProvider.php`)
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Modules\{Module}\Infrastructure\Provider;
-
-use Modules\{Module}\Domain\Repository\{Name}Repository;
-use Modules\{Module}\Infrastructure\Persistence\Eloquent\Repository\{Name}EloquentRepository;
-use Illuminate\Support\ServiceProvider;
-
-final class {Module}ServiceProvider extends ServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->bind(
-            {Name}Repository::class,
-            {Name}EloquentRepository::class
-        );
-    }
+// Validation
+final class Invalid{Name} extends \DomainException {
+    public static function empty(): self { return new self('{Name} cannot be empty'); }
+    public static function withFormat(string $value): self { return new self("Invalid format: {$value}"); }
 }
 ```
 

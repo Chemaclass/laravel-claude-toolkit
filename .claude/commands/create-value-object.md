@@ -199,117 +199,18 @@ final class <ValueObjectName>Test extends TestCase
 }
 ```
 
-## ID Value Object Test Template
+## Common Patterns
 
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace Tests\Unit\<Module>\Domain\Entity;
-
-use Modules\<Module>\Domain\Entity\<EntityName>Id;
-use PHPUnit\Framework\TestCase;
-
-final class <EntityName>IdTest extends TestCase
-{
-    public function test_can_generate_new_id(): void
-    {
-        $id = <EntityName>Id::generate();
-
-        $this->assertNotEmpty($id->toString());
-    }
-
-    public function test_can_create_from_valid_uuid(): void
-    {
-        $uuid = '550e8400-e29b-41d4-a716-446655440000';
-        $id = <EntityName>Id::fromString($uuid);
-
-        $this->assertSame($uuid, $id->toString());
-    }
-
-    public function test_throws_exception_for_invalid_uuid(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        <EntityName>Id::fromString('not-a-valid-uuid');
-    }
-
-    public function test_equals_returns_true_for_same_id(): void
-    {
-        $uuid = '550e8400-e29b-41d4-a716-446655440000';
-        $id1 = <EntityName>Id::fromString($uuid);
-        $id2 = <EntityName>Id::fromString($uuid);
-
-        $this->assertTrue($id1->equals($id2));
-    }
-
-    public function test_equals_returns_false_for_different_id(): void
-    {
-        $id1 = <EntityName>Id::generate();
-        $id2 = <EntityName>Id::generate();
-
-        $this->assertFalse($id1->equals($id2));
-    }
-}
-```
-
-## Common Value Object Patterns
-
-### Composite Value Object
-```php
-final readonly class Address
-{
-    private function __construct(
-        private string $street,
-        private string $city,
-        private string $postalCode,
-        private string $country,
-    ) {}
-
-    public static function create(string $street, string $city, string $postalCode, string $country): self
-    {
-        // Validate all fields
-        return new self($street, $city, $postalCode, $country);
-    }
-
-    public function equals(self $other): bool
-    {
-        return $this->street === $other->street
-            && $this->city === $other->city
-            && $this->postalCode === $other->postalCode
-            && $this->country === $other->country;
-    }
-}
-```
-
-### Numeric Value Object
-```php
-final readonly class Money
-{
-    private function __construct(
-        private int $amount,
-        private string $currency,
-    ) {}
-
-    public static function fromCents(int $amount, string $currency): self
-    {
-        return new self($amount, strtoupper($currency));
-    }
-
-    public function add(self $other): self
-    {
-        if ($this->currency !== $other->currency) {
-            throw new \DomainException('Cannot add money with different currencies');
-        }
-        return new self($this->amount + $other->amount, $this->currency);
-    }
-}
-```
+| Pattern | Factory | Example |
+|---------|---------|---------|
+| Simple string | `fromString()` | Email, Name |
+| UUID identifier | `generate()`, `fromString()` | UserId, OrderId |
+| Composite | `create()` with multiple args | Address, Money |
+| Numeric | `fromCents()`, `fromFloat()` | Money, Percentage |
 
 ## Test Base Class Note
 
-Domain tests should use `PHPUnit\Framework\TestCase` directly (no Laravel), keeping the domain layer framework-agnostic.
+Domain tests use `PHPUnit\Framework\TestCase` directly (no Laravel).
 
 ## Checklist
 - [ ] Test file created first
