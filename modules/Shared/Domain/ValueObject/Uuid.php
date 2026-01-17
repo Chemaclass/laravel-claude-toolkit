@@ -9,7 +9,7 @@ use InvalidArgumentException;
 /**
  * @phpstan-consistent-constructor
  */
-readonly class Uuid
+readonly class Uuid implements \Stringable
 {
     private const PATTERN = '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i';
 

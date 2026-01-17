@@ -6,7 +6,7 @@ namespace Modules\Shared\Domain\ValueObject;
 
 use InvalidArgumentException;
 
-final readonly class Email
+final readonly class Email implements \Stringable
 {
     private function __construct(
         private string $value,

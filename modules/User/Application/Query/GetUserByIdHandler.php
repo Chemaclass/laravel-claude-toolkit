@@ -20,7 +20,7 @@ final readonly class GetUserByIdHandler
         $userId = UserId::fromString($query->id);
         $user = $this->userRepository->findById($userId);
 
-        if ($user === null) {
+        if (! $user instanceof User) {
             throw UserNotFoundException::withId($userId);
         }
 
