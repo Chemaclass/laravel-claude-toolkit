@@ -172,3 +172,9 @@ See [CLAUDE.md](CLAUDE.md) for:
 - Inter-module communication patterns
 - TDD workflow guidelines
 - Complete command reference
+
+---
+
+## Credits
+
+Claude Code configuration patterns partially inspired by [everything-claude-code](https://github.com/affaan-m/everything-claude-code) - a comprehensive collection of Claude Code best practices for agents, rules, hooks, and skills.
