@@ -1,0 +1,35 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qE '(dd\\(|dump\\(|var_dump\\()'; then echo 'WARNING: Debug statement detected. Remove dd()/dump()/var_dump() before committing.'; fi"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash(composer require*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Remember to run: composer audit'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Commit created. Run tests before pushing: ./vendor/bin/phpunit'"
+          }
+        ]
+      }
+    ]
+  }
+}

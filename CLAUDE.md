@@ -195,6 +195,8 @@ Always follow red-green-refactor:
 | `/create-controller <Module> <Name>` | Create thin HTTP controller |
 | `/tdd-cycle` | Guide red-green-refactor workflow |
 | `/refactor-check <path>` | Analyze code for SOLID violations |
+| `/code-review [path]` | Review code for quality and architecture compliance |
+| `/security-review [path]` | Security analysis with OWASP Top 10 checks |
 
 ## Available Agents
 
@@ -203,6 +205,20 @@ Always follow red-green-refactor:
 | `domain-architect` | DDD/modular monolith architecture guidance |
 | `tdd-coach` | Test-driven development coaching |
 | `clean-code-reviewer` | Code quality review |
+| `security-reviewer` | Security vulnerability detection and remediation |
+
+## Rules
+
+Always-follow guidelines in `.claude/rules/`:
+
+| Rule | Purpose |
+|------|---------|
+| `security.md` | Pre-commit security checks, secret management |
+| `testing.md` | Coverage standards, TDD workflow |
+| `coding-style.md` | Immutability, file limits, naming conventions |
+| `git-workflow.md` | Conventional commits, PR process |
+| `performance.md` | Database optimization, caching strategy |
+| `agents.md` | When and how to delegate to agents |
 
 ## Quick Reference
 
