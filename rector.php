@@ -8,7 +8,6 @@ use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__.'/app',
         __DIR__.'/modules',
         __DIR__.'/tests',
     ])
