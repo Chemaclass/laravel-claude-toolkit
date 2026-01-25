@@ -97,11 +97,12 @@ This toolkit includes Claude Code configurations for AI-assisted development.
 ### Example Feature Workflow
 
 ```
-1. /create-entity Order Order        → Domain entity + test
-2. /create-repository Order Order    → Repository pattern
-3. /create-use-case Order Command CreateOrder → Handler
-4. /create-controller Order Order    → HTTP layer
-5. /tdd-cycle                        → Guide through TDD
+1. /create-module Order              → Module structure
+2. /create-entity Order Order        → Domain entity + test
+3. /create-repository Order Order    → Repository pattern
+4. /create-use-case Order Command CreateOrder → Handler
+5. /create-controller Order Order    → HTTP layer
+6. /tdd-cycle                        → Guide through TDD
 ```
 
 ### Available Agents
@@ -111,17 +112,32 @@ This toolkit includes Claude Code configurations for AI-assisted development.
 | `domain-architect` | DDD & hexagonal architecture guidance |
 | `tdd-coach` | Red-green-refactor workflow coaching |
 | `clean-code-reviewer` | SOLID principles & code smell detection |
+| `security-reviewer` | OWASP Top 10 & Laravel security analysis |
 
 ### Available Commands
 
 | Command | Generates |
 |---------|-----------|
+| `/create-module` | Full module structure with all layers |
 | `/create-entity` | Domain entity + value objects + test |
+| `/create-value-object` | Immutable value object + validation + test |
 | `/create-repository` | Interface + Eloquent + InMemory implementations |
 | `/create-use-case` | Command/Query DTO + Handler + test |
 | `/create-controller` | Thin controller + request + resource |
 | `/tdd-cycle` | Interactive red-green-refactor guide |
 | `/refactor-check` | SOLID violations & improvement report |
+| `/code-review` | Code quality & architecture compliance review |
+| `/security-review` | Security analysis with OWASP checks |
+
+### Rules (Always Active)
+
+| Rule | Enforces |
+|------|----------|
+| `security` | Pre-commit security checks, no hardcoded secrets |
+| `testing` | 80% coverage minimum, TDD workflow |
+| `coding-style` | Immutability, file limits, naming conventions |
+| `git-workflow` | Conventional commits, PR process |
+| `performance` | Database optimization, caching patterns |
 
 ---
 
