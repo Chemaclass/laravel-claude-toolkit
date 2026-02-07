@@ -7,7 +7,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400,500,600,700&display=swap" rel="stylesheet" />
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
+            @vite(['resources/css/app.css', 'resources/js/app.tsx'])
         @endif
         <style>
             * { box-sizing: border-box; }
@@ -245,8 +245,13 @@
                     <div class="stack-badges">
                         <span class="badge">PHP 8.4</span>
                         <span class="badge">Laravel 12</span>
-                        <span class="badge">SQLite</span>
+                        <span class="badge">React 19</span>
+                        <span class="badge">TypeScript</span>
+                        <span class="badge">Inertia.js</span>
                         <span class="badge">Tailwind CSS 4</span>
+                        <span class="badge">Vitest</span>
+                        <span class="badge">ESLint</span>
+                        <span class="badge">SQLite</span>
                         <span class="badge">Sail</span>
                     </div>
 
@@ -312,11 +317,11 @@
                         <details>
                             <summary class="table-row">
                                 <span class="table-name">PHPUnit</span>
-                                <span class="table-desc">Testing framework</span>
+                                <span class="table-desc">PHP testing framework</span>
                             </summary>
                             <div class="example-box">
                                 <div class="example-label">Run:</div>
-                                <div class="example-input">./vendor/bin/sail test</div>
+                                <div class="example-input">./vendor/bin/phpunit</div>
                                 <div class="example-label" style="margin-top: 0.5rem;">Features:</div>
                                 <div class="example-output">- Unit, Integration & Feature tests
 - Parallel test execution
@@ -327,16 +332,67 @@
 
                         <details>
                             <summary class="table-row">
+                                <span class="table-name">ESLint</span>
+                                <span class="table-desc">TypeScript & React linting</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Run:</div>
+                                <div class="example-input">npm run lint      # check</div>
+                                <div class="example-input">npm run lint:fix  # auto-fix</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Features:</div>
+                                <div class="example-output">- TypeScript-ESLint strict rules
+- React Hooks linting
+- React Refresh compatibility
+- No any, no console.log</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">TypeScript</span>
+                                <span class="table-desc">Static type checking for frontend</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Run:</div>
+                                <div class="example-input">npm run typecheck</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Features:</div>
+                                <div class="example-output">- Strict mode enabled
+- Path aliases (@/ → resources/js/)
+- React JSX support
+- Catches type errors before runtime</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">Vitest</span>
+                                <span class="table-desc">Frontend testing framework</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Run:</div>
+                                <div class="example-input">npm run test:unit   # run once</div>
+                                <div class="example-input">npm run test:watch  # watch mode</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Features:</div>
+                                <div class="example-output">- Component smoke tests
+- React Testing Library
+- Co-located test files
+- Factory-based test props</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
                                 <span class="table-name">Git Hooks</span>
-                                <span class="table-desc">Pre-commit quality gates</span>
+                                <span class="table-desc">Parallel pre-commit & pre-push gates</span>
                             </summary>
                             <div class="example-box">
                                 <div class="example-label">Auto-configured:</div>
                                 <div class="example-input">composer setup  # enables hooks</div>
-                                <div class="example-label" style="margin-top: 0.5rem;">Pre-commit runs:</div>
-                                <div class="example-output">- Pint (code style check)
-- PHPStan (static analysis)
-- Blocks commits if checks fail</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Pre-commit (parallel):</div>
+                                <div class="example-output">Phase 1: Pint + Rector + PHPStan + ESLint + TypeScript
+Phase 2: PHPUnit + Vitest (after analysis passes)</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Pre-push (parallel):</div>
+                                <div class="example-output">Full backend (composer test) + frontend (npm run test)</div>
                             </div>
                         </details>
                     </div>
@@ -395,6 +451,70 @@
 - DIP violation: Depend on interface, not Eloquent model
 - Long method: Extract validateOrder() helper
 - Missing null check on optional discount</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">security-reviewer</span>
+                                <span class="table-desc">OWASP Top 10 & vulnerability detection</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">You ask:</div>
+                                <div class="example-input">"Check the auth module for vulnerabilities"</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Agent checks:</div>
+                                <div class="example-output">- SQL injection & XSS vectors
+- CSRF protection coverage
+- Mass assignment vulnerabilities
+- Hardcoded secrets & credentials</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">react-reviewer</span>
+                                <span class="table-desc">React/TypeScript frontend quality review</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">You ask:</div>
+                                <div class="example-input">"Review the dashboard components"</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Agent checks:</div>
+                                <div class="example-output">- React pattern compliance
+- UI component consistency (shadcn/ui)
+- Dark mode coverage
+- TypeScript strict mode violations</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">changelog-keeper</span>
+                                <span class="table-desc">Changelog maintenance & formatting</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">You ask:</div>
+                                <div class="example-input">"Update the changelog with recent changes"</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Agent handles:</div>
+                                <div class="example-output">- User-focused entry writing
+- Change categorization (Feature/Fix/Breaking)
+- Date section management
+- Consistent formatting</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">explorer</span>
+                                <span class="table-desc">Fast read-only codebase search & analysis</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">You ask:</div>
+                                <div class="example-input">"Find all repository implementations"</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Agent provides:</div>
+                                <div class="example-output">- File pattern matching
+- Dependency mapping between modules
+- Directory structure analysis
+- Quick codebase navigation</div>
                             </div>
                         </details>
                     </div>
@@ -499,6 +619,172 @@ Then loops back to RED for next behavior</div>
 - Suggested refactoring patterns</div>
                             </div>
                         </details>
+
+                        <div style="border-top: 1px solid rgba(107, 114, 128, 0.2); margin: 0.75rem 0 0.5rem 0; padding-top: 0.25rem;">
+                            <div class="table-header">FRONTEND SCAFFOLDING</div>
+                        </div>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/create-page</span>
+                                <span class="table-desc">Inertia.js React page + test + factory</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/create-page Order Show</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Creates:</div>
+                                <div class="example-file">resources/js/pages/Order/Show.tsx</div>
+                                <div class="example-file">resources/js/pages/Order/Show.test.tsx</div>
+                                <div class="example-file">resources/js/test/factories/order.ts</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/create-component</span>
+                                <span class="table-desc">React subcomponent with barrel export</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/create-component Order ItemsCard</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Creates:</div>
+                                <div class="example-file">resources/js/pages/Order/components/ItemsCard.tsx</div>
+                                <div class="example-file">resources/js/pages/Order/components/index.ts</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/create-hook</span>
+                                <span class="table-desc">Custom React hook with co-located test</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/create-hook use-theme</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Creates:</div>
+                                <div class="example-file">resources/js/hooks/use-theme.ts</div>
+                                <div class="example-file">resources/js/hooks/use-theme.test.ts</div>
+                            </div>
+                        </details>
+
+                        <div style="border-top: 1px solid rgba(107, 114, 128, 0.2); margin: 0.75rem 0 0.5rem 0; padding-top: 0.25rem;">
+                            <div class="table-header">QUALITY & REVIEW</div>
+                        </div>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/code-review</span>
+                                <span class="table-desc">Architecture & quality compliance review</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/code-review modules/Order/</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Reviews:</div>
+                                <div class="example-output">- Hexagonal architecture compliance
+- Naming convention adherence
+- Test coverage gaps
+- Code smell detection</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/security-review</span>
+                                <span class="table-desc">OWASP Top 10 security analysis</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/security-review modules/User/</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Checks:</div>
+                                <div class="example-output">- SQL injection & XSS vectors
+- CSRF & mass assignment protection
+- Hardcoded secrets detection
+- Authentication/authorization gaps</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/ui-review</span>
+                                <span class="table-desc">Frontend design consistency review</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/ui-review resources/js/pages/Order/</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Checks:</div>
+                                <div class="example-output">- Dark mode coverage (every bg/text/border)
+- UI component usage (no raw HTML)
+- Accessibility & interactive states
+- Theme consistency</div>
+                            </div>
+                        </details>
+
+                        <div style="border-top: 1px solid rgba(107, 114, 128, 0.2); margin: 0.75rem 0 0.5rem 0; padding-top: 0.25rem;">
+                            <div class="table-header">WORKFLOW</div>
+                        </div>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/test</span>
+                                <span class="table-desc">Smart test runner with module filtering</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/test Order</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Runs:</div>
+                                <div class="example-output">- Filters tests by module or class name
+- Runs both PHPUnit and Vitest as needed
+- Shows clear pass/fail summary</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/fix</span>
+                                <span class="table-desc">Auto-fix all code quality issues</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/fix</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Runs:</div>
+                                <div class="example-output">- Pint (PHP code style)
+- Rector (PHP refactoring)
+- ESLint --fix (TypeScript/React)
+- Reports remaining manual fixes</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/pr</span>
+                                <span class="table-desc">Create PR with auto-generated description</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/pr Add order cancellation</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Creates:</div>
+                                <div class="example-output">- Branch from current changes
+- PR with summary & test plan
+- Changelog entry
+- Pushes and opens PR URL</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">/gh-issue</span>
+                                <span class="table-desc">Fetch GitHub issue & plan implementation</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Input:</div>
+                                <div class="example-input">/gh-issue 42</div>
+                                <div class="example-label" style="margin-top: 0.5rem;">Does:</div>
+                                <div class="example-output">- Fetches issue details from GitHub
+- Analyzes requirements & affected modules
+- Proposes implementation plan
+- Creates branch and starts work</div>
+                            </div>
+                        </details>
                     </div>
 
                     <!-- Claude Code Skills Section -->
@@ -593,6 +879,48 @@ Then loops back to RED for next behavior</div>
 - Coupling between modules</div>
                             </div>
                         </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">create-page</span>
+                                <span class="table-desc">Inertia.js React page scaffolding</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Skill provides:</div>
+                                <div class="example-output">- AppLayout/GuestLayout integration
+- Head title & breadcrumbs pattern
+- Co-located test with factory props
+- Inertia page resolution conventions</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">create-component</span>
+                                <span class="table-desc">React subcomponent patterns</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Skill provides:</div>
+                                <div class="example-output">- Named export (not default)
+- Props interface with TypeScript
+- Barrel re-export in index.ts
+- Dark mode & accessibility patterns</div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary class="table-row">
+                                <span class="table-name">create-hook</span>
+                                <span class="table-desc">Custom React hook templates</span>
+                            </summary>
+                            <div class="example-box">
+                                <div class="example-label">Skill provides:</div>
+                                <div class="example-output">- use-{name}.ts naming convention
+- Co-located test with renderHook
+- TypeScript return type definition
+- Proper cleanup patterns</div>
+                            </div>
+                        </details>
                     </div>
 
                     <!-- Architecture Preview Section -->
@@ -607,6 +935,14 @@ Then loops back to RED for next behavior</div>
                         <p>└── <span class="tree-folder">Infrastructure/</span>  <span class="tree-comment"># Laravel adapters & HTTP layer</span></p>
                     </div>
 
+                    <div class="code-block tree">
+                        <p><span class="tree-folder">resources/js/</span></p>
+                        <p>├── <span class="tree-folder">pages/{Module}/</span>  <span class="tree-comment"># Inertia.js React pages + tests</span></p>
+                        <p>├── <span class="tree-folder">layouts/</span>         <span class="tree-comment"># AppLayout, GuestLayout</span></p>
+                        <p>├── <span class="tree-folder">lib/</span>             <span class="tree-comment"># Utilities (cn, formatting)</span></p>
+                        <p>└── <span class="tree-folder">test/</span>            <span class="tree-comment"># Mocks, setup, factories</span></p>
+                    </div>
+
                     <div class="highlight-tags">
                         <span class="highlight-tag">Modular Monolith</span>
                         <span class="highlight-tag">|</span>
@@ -617,6 +953,8 @@ Then loops back to RED for next behavior</div>
                         <span class="highlight-tag">TDD</span>
                         <span class="highlight-tag">|</span>
                         <span class="highlight-tag">SOLID</span>
+                        <span class="highlight-tag">|</span>
+                        <span class="highlight-tag">React + Inertia.js</span>
                     </div>
 
                 </div>
