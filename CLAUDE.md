@@ -185,6 +185,8 @@ Always follow red-green-refactor:
 
 ## Available Commands
 
+### Backend Scaffolding
+
 | Command | Description |
 |---------|-------------|
 | `/create-module <Name>` | Scaffold a new module with full directory structure |
@@ -193,10 +195,34 @@ Always follow red-green-refactor:
 | `/create-use-case <Module> <Type> <Name>` | Create command/query handler |
 | `/create-repository <Module> <Name>` | Create repo interface + implementations |
 | `/create-controller <Module> <Name>` | Create thin HTTP controller |
+
+### Frontend Scaffolding
+
+| Command | Description |
+|---------|-------------|
+| `/create-page <Module> <PageName>` | Create Inertia.js React page with test and factory |
+| `/create-component <Module> <Name>` | Create React subcomponent with barrel export |
+| `/create-hook <hook-name>` | Create custom React hook with co-located test |
+
+### Quality & Review
+
+| Command | Description |
+|---------|-------------|
 | `/tdd-cycle` | Guide red-green-refactor workflow |
 | `/refactor-check <path>` | Analyze code for SOLID violations |
 | `/code-review [path]` | Review code for quality and architecture compliance |
 | `/security-review [path]` | Security analysis with OWASP Top 10 checks |
+| `/ui-review [path]` | Frontend design consistency and theme compliance review |
+
+### Workflow
+
+| Command | Description |
+|---------|-------------|
+| `/test [filter]` | Smart test runner with module/class filtering |
+| `/fix` | Auto-fix code quality issues (Pint, Rector, PHPStan) |
+| `/pr [title]` | Create PR with auto-generated description and changelog |
+| `/gh-issue <number>` | Fetch GitHub issue and plan implementation |
+| `/update-changelog [desc]` | Update CHANGELOG.md with recent changes |
 
 ## Available Agents
 
@@ -206,16 +232,40 @@ Always follow red-green-refactor:
 | `tdd-coach` | Test-driven development coaching |
 | `clean-code-reviewer` | Code quality review |
 | `security-reviewer` | Security vulnerability detection and remediation |
+| `changelog-keeper` | Changelog maintenance and formatting |
+| `explorer` | Fast read-only codebase search and analysis |
+| `react-reviewer` | React/TypeScript frontend code quality review |
 
 ## Rules
 
 Always-follow guidelines in `.claude/rules/`:
 
+### Backend
+
 | Rule | Purpose |
 |------|---------|
-| `security.md` | Pre-commit security checks, secret management |
-| `testing.md` | Coverage standards, TDD workflow |
+| `architecture.md` | Modular monolith architecture overview |
+| `domain-layer.md` | Entity, VO, event, exception patterns |
+| `application-layer.md` | Command/query handler conventions |
+| `infrastructure-layer.md` | Eloquent repos, controllers, service providers |
+| `inter-module.md` | Cross-module communication strategies |
+| `naming-conventions.md` | File naming, namespaces, feature workflow |
+
+### Frontend
+
+| Rule | Purpose |
+|------|---------|
+| `frontend.md` | Design consistency, UI components, dark mode |
+| `react-conventions.md` | React/Inertia patterns, TypeScript, file naming |
+| `frontend-testing.md` | Vitest, co-located tests, factories, mocks |
+
+### General
+
+| Rule | Purpose |
+|------|---------|
 | `coding-style.md` | Immutability, file limits, naming conventions |
+| `testing.md` | Coverage standards, TDD workflow, test patterns |
+| `security.md` | Pre-commit security checks, secret management |
 | `git-workflow.md` | Conventional commits, PR process |
 | `performance.md` | Database optimization, caching strategy |
 | `agents.md` | When and how to delegate to agents |
@@ -230,7 +280,8 @@ Always-follow guidelines in `.claude/rules/`:
 4. Create repository interface and test (`/create-repository`)
 5. Create use case handler and test (`/create-use-case`)
 6. Create controller and feature test (`/create-controller`)
-7. Run all tests to verify
+7. Run all tests to verify (`/test`)
+8. Update changelog (`/update-changelog`)
 
 ### File Naming Conventions
 

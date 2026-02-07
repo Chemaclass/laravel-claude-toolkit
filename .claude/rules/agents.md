@@ -8,6 +8,9 @@
 | Writing tests first | `tdd-coach` |
 | Reviewing code quality | `clean-code-reviewer` |
 | Security assessment | `security-reviewer` |
+| Changelog maintenance | `changelog-keeper` |
+| Fast codebase search | `explorer` |
+| React frontend review | `react-reviewer` |
 
 ## Agent Delegation Protocol
 
@@ -42,6 +45,25 @@
 - Dependency vulnerability scanning
 - Credential/secret detection
 
+### changelog-keeper
+- Changelog format maintenance
+- User-focused entry writing
+- Change categorization (Feature/Improvement/Fix/Breaking)
+- Date section management
+
+### explorer
+- Fast read-only codebase search
+- File pattern matching
+- Dependency mapping between modules
+- Directory structure analysis
+
+### react-reviewer
+- React pattern compliance
+- TypeScript quality checks
+- UI component consistency
+- Dark mode and accessibility
+- Performance patterns
+
 ## Usage Examples
 
 ```
@@ -56,4 +78,13 @@
 
 # For security concerns
 "Run security-reviewer on the auth module"
+
+# For changelog updates
+"Have changelog-keeper update the changelog"
+
+# For fast codebase search
+"Use explorer to find all repository implementations"
+
+# For React review
+"Have react-reviewer check the dashboard components"
 ```

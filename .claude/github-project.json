@@ -1,0 +1,19 @@
+{
+  "owner": "YOUR_GITHUB_USERNAME",
+  "projectNumber": 1,
+  "projectId": "PVT_XXXXXXXXXX",
+  "statusFieldId": "PVTSSF_XXXXXXXXXX",
+  "statusOptions": {
+    "backlog": "OPTION_ID_1",
+    "ready": "OPTION_ID_2",
+    "inProgress": "OPTION_ID_3",
+    "inReview": "OPTION_ID_4",
+    "done": "OPTION_ID_5"
+  },
+  "_comment": "Run these commands to get actual IDs:",
+  "_setup": [
+    "gh auth refresh -s project",
+    "gh project list --owner YOUR_GITHUB_USERNAME",
+    "gh project field-list PROJECT_NUMBER --owner YOUR_GITHUB_USERNAME --format json"
+  ]
+}
