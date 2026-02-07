@@ -1,17 +1,118 @@
-#!/bin/sh
+#!/bin/bash
+set -o pipefail
 
 echo "Running pre-commit checks..."
 
-# Run composer test (lint, phpstan, phpunit)
-composer test
+TMPDIR=$(mktemp -d)
+trap "rm -rf $TMPDIR" EXIT
 
-if [ $? -ne 0 ]; then
+# Run static analysis tools in parallel (they are independent)
+echo "→ Running BE + FE analysis in parallel..."
+
+(
+    ./vendor/bin/pint --test 2>&1
+    exit "${PIPESTATUS[0]}"
+) > "$TMPDIR/pint.out" 2>&1 &
+PID_PINT=$!
+
+(
+    ./vendor/bin/rector --dry-run 2>&1
+    exit "${PIPESTATUS[0]}"
+) > "$TMPDIR/rector.out" 2>&1 &
+PID_RECTOR=$!
+
+(
+    ./vendor/bin/phpstan analyse --memory-limit=512M 2>&1
+    exit "${PIPESTATUS[0]}"
+) > "$TMPDIR/phpstan.out" 2>&1 &
+PID_PHPSTAN=$!
+
+npm run lint > "$TMPDIR/eslint.out" 2>&1 &
+PID_ESLINT=$!
+
+npm run typecheck > "$TMPDIR/typecheck.out" 2>&1 &
+PID_TYPECHECK=$!
+
+# Wait for all and collect exit codes
+wait $PID_PINT;      EXIT_PINT=$?
+wait $PID_RECTOR;    EXIT_RECTOR=$?
+wait $PID_PHPSTAN;   EXIT_PHPSTAN=$?
+wait $PID_ESLINT;    EXIT_ESLINT=$?
+wait $PID_TYPECHECK; EXIT_TYPECHECK=$?
+
+FAILED=0
+
+if [ $EXIT_PINT -ne 0 ]; then
     echo ""
-    echo "Pre-commit checks failed!"
+    echo "Pint check failed!"
+    cat "$TMPDIR/pint.out"
     echo "Run 'composer fix' to auto-fix code style issues."
+    FAILED=1
+fi
+
+if [ $EXIT_RECTOR -ne 0 ]; then
     echo ""
+    echo "Rector check failed!"
+    cat "$TMPDIR/rector.out"
+    echo "Run 'composer rector:fix' to auto-fix issues."
+    FAILED=1
+fi
+
+if [ $EXIT_PHPSTAN -ne 0 ]; then
+    echo ""
+    echo "PHPStan check failed!"
+    cat "$TMPDIR/phpstan.out"
+    FAILED=1
+fi
+
+if [ $EXIT_ESLINT -ne 0 ]; then
+    echo ""
+    echo "ESLint check failed!"
+    cat "$TMPDIR/eslint.out"
+    echo "Run 'npm run lint:fix' to auto-fix issues."
+    FAILED=1
+fi
+
+if [ $EXIT_TYPECHECK -ne 0 ]; then
+    echo ""
+    echo "TypeScript check failed!"
+    cat "$TMPDIR/typecheck.out"
+    FAILED=1
+fi
+
+if [ $FAILED -ne 0 ]; then
     exit 1
 fi
 
-echo "All checks passed!"
+# Run BE + FE tests in parallel (after analysis passes)
+echo "→ Running tests..."
+
+./vendor/bin/phpunit > "$TMPDIR/phpunit.out" 2>&1 &
+PID_PHPUNIT=$!
+
+npm run test:unit > "$TMPDIR/vitest.out" 2>&1 &
+PID_VITEST=$!
+
+wait $PID_PHPUNIT; EXIT_PHPUNIT=$?
+wait $PID_VITEST;  EXIT_VITEST=$?
+
+if [ $EXIT_PHPUNIT -ne 0 ]; then
+    echo ""
+    echo "PHP tests failed!"
+    cat "$TMPDIR/phpunit.out"
+    FAILED=1
+fi
+
+if [ $EXIT_VITEST -ne 0 ]; then
+    echo ""
+    echo "Vitest tests failed!"
+    cat "$TMPDIR/vitest.out"
+    FAILED=1
+fi
+
+if [ $FAILED -ne 0 ]; then
+    exit 1
+fi
+
+echo "All pre-commit checks passed!"
 exit 0

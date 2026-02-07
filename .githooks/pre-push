@@ -1,0 +1,44 @@
+#!/bin/bash
+set -o pipefail
+
+echo "Running pre-push checks (full test suite)..."
+
+TMPDIR=$(mktemp -d)
+trap 'rm -rf $TMPDIR' EXIT
+
+# Run BE and FE full test suites in parallel
+composer test > "$TMPDIR/be.out" 2>&1 &
+PID_BE=$!
+
+npm run test > "$TMPDIR/fe.out" 2>&1 &
+PID_FE=$!
+
+wait $PID_BE; EXIT_BE=$?
+wait $PID_FE; EXIT_FE=$?
+
+FAILED=0
+
+if [ $EXIT_BE -ne 0 ]; then
+    echo ""
+    echo "Backend checks failed!"
+    cat "$TMPDIR/be.out"
+    echo "Run 'composer fix' to auto-fix code style issues."
+    echo "Run 'composer test' to see all failures."
+    FAILED=1
+fi
+
+if [ $EXIT_FE -ne 0 ]; then
+    echo ""
+    echo "Frontend checks failed!"
+    cat "$TMPDIR/fe.out"
+    echo "Run 'npm run lint:fix' to auto-fix lint issues."
+    echo "Run 'npm run test' to see all failures."
+    FAILED=1
+fi
+
+if [ $FAILED -ne 0 ]; then
+    exit 1
+fi
+
+echo "All pre-push checks passed!"
+exit 0
