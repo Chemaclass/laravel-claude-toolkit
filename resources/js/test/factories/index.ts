@@ -1,0 +1,1 @@
+export { createDashboardProps } from './dashboard';
