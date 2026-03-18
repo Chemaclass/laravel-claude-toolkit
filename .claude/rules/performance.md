@@ -1,3 +1,7 @@
+---
+globs: modules/**/*.php
+---
+
 # Performance Rules
 
 ## Database Optimization
