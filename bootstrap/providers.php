@@ -1,6 +1,9 @@
 <?php
 
+use Modules\Shared\Infrastructure\Provider\SharedServiceProvider;
+use Modules\User\Infrastructure\Provider\UserServiceProvider;
+
 return [
-    Modules\Shared\Infrastructure\Provider\SharedServiceProvider::class,
-    Modules\User\Infrastructure\Provider\UserServiceProvider::class,
+    SharedServiceProvider::class,
+    UserServiceProvider::class,
 ];

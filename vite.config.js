@@ -15,15 +15,16 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'resources/js'),
+            '@': path.resolve(import.meta.dirname, 'resources/js'),
         },
     },
     build: {
         rollupOptions: {
             output: {
-                manualChunks: {
-                    react: ['react', 'react-dom'],
-                    inertia: ['@inertiajs/react'],
+                manualChunks(id) {
+                    if (!id.includes('node_modules')) return;
+                    if (id.includes('@inertiajs')) return 'inertia';
+                    if (/[\\/](react|react-dom|scheduler)[\\/]/.test(id)) return 'react';
                 },
             },
         },
