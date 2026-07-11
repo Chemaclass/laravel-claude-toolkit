@@ -2,8 +2,9 @@
 
 A Laravel starter kit for building scalable applications using **Modular Monolith**, **Hexagonal Architecture**, and **AI-assisted development**.
 
-[![PHP 8.4](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)](https://php.net)
-[![Laravel 12](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP 8.5](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php&logoColor=white)](https://php.net)
+[![Laravel 13](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
@@ -78,7 +79,7 @@ rm index.html .nojekyll
 
 Access: http://localhost:8085
 
-**Stack:** PHP 8.4 | Laravel 12 | SQLite | Tailwind CSS 4 | Sail
+**Stack:** PHP 8.5 | Laravel 13 | React 19 + Inertia.js | SQLite | Vite | Tailwind CSS 4 | Sail
 
 ---
 
